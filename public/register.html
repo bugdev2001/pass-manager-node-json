@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
+    <link rel="stylesheet" href="css/form-style.css">
+    <title>Register</title>
+</head>
+<body>
+<!-- Success message container -->
+<div id="registerSuccessMessage" class="alert alert-success" style="display: none;">
+    <strong>Success!</strong> <strong>Registration successful.</strong>
+</div>
+
+<div class="main">
+    <h1>Register</h1>
+    <form id="registerForm">
+        <div class="lgn input-field">
+            <input class="register-cred" type="text" placeholder="Username" id="username" required>
+            <input class="register-cred" type="password" placeholder="Password" id="password" required>
+            <input class="register-cred" type="password" placeholder="Re-type Password" id="passwordConfirmation"
+                   required>
+        </div>
+        <div class="lgn input-buttons">
+            <input class="btn register" type="button" value="Confirm" onclick="registerUser()">
+        </div>
+    </form>
+    <a class="links" href="login.html">Go back to Login</a>
+</div>
+
+<script>
+    async function registerUser() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const passwordConfirmation = document.getElementById('passwordConfirmation').value;
+
+        if (password !== passwordConfirmation) {
+            alert("Passwords do not match");
+            return;
+        }
+
+        const newUser = {
+            username,
+            password,
+            credentials: [],
+        };
+
+        try {
+            const response = await fetch('https://password-manager-9868.onrender.com/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newUser),
+            });
+
+            if (response.ok) {
+                document.getElementById('registerSuccessMessage').style.display = 'block';
+                // window.location.href = 'login.html';
+                setTimeout(() => {
+                    // Redirect to login.html after 2 seconds
+                    window.location.href = 'login.html';
+                }, 1000);
+            } else {
+                alert("Registration failed");
+            }
+        } catch (error) {
+            console.error('Error during registration:', error);
+            alert("Registration failed");
+        }
+    }
+</script>
+</body>
+</html>
